@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import io from 'socket.io-client';
 
 import Footer from '../partial/footer';
 import firebase, { auth, provider } from '../firebase.js';
+
+var socket = null;
  
 class quiz extends Component {
    constructor() 
@@ -19,6 +22,7 @@ class quiz extends Component {
       
     }
     componentDidMount() {
+      socket = io('http://localhost:8880/communication')
       auth.onAuthStateChanged((user) => {
         if (user) {
           this.setState({ user });
@@ -104,17 +108,17 @@ class quiz extends Component {
             {this.state.questions.map((item) => {
             return (
             <li key={item.id}>
-            <p>Question: {item.question}</p>
-            <p>Question Type: {item.questionType}</p>
+            <p>{item.question}</p>
+            {/* <p>Question Type: {item.questionType}</p> */}
             
             
             {(item.questionType == 1) ?
               <form>
-                <p>Choices:</p>
-                <li>1. {item.choice1}</li>           
-                <li>2. {item.choice2}</li>   
-                <li>3. {item.choice3}</li>   
-                <li>4. {item.choice4}</li>    
+                {/* <p>Choices:</p> */}
+                <button type="button">{item.choice1}</button>           
+                <button type="button">{item.choice2}</button>   
+                <button type="button">{item.choice3}</button>   
+                <button type="button">{item.choice4}</button>    
               </form>       
             
             : 
@@ -128,7 +132,7 @@ class quiz extends Component {
             
             
                    
-            <p>Answer: {item.answer}</p>
+            {/* <p>Answer: {item.answer}</p> */}
             </li>)
               })}
             </ul>
