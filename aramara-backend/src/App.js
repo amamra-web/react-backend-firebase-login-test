@@ -14,6 +14,7 @@ import Labs from './components/labs';
 import Chat from './components/chat';
 import Error from './components/error';
 import Navigation from './components/Navigation';
+import graph from "./components/graph";
 
 class App extends Component {
   
@@ -32,6 +33,7 @@ class App extends Component {
              <Route path="/quiz" component={Quiz}/>
              <Route path="/labs" component={Labs}/>
              <Route path="/chat" component={Chat}/>
+             <Route path="/graph" component={graph}/>
 
 
             <Route component={Error}/>
