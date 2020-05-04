@@ -4,43 +4,51 @@ import Footer from '../partial/footer';
 import firebase, { auth, provider } from '../firebase.js';
  
 class quiz extends Component {
-   constructor() {
+   constructor() 
+   {
       super();
       this.state = {
         currentItem: '',
         userName: '',
-        items: [],
+        questions: [],
         user: null
       }
-  this.handleChange = this.handleChange.bind(this);
-  this.handleSubmit = this.handleSubmit.bind(this);
-  this.login = this.login.bind(this); 
-  this.logout = this.logout.bind(this);
-  }
-  
+      this.handleChange = this.handleChange.bind(this);
+      this.login = this.login.bind(this); 
+      this.logout = this.logout.bind(this);
+      
+    }
     componentDidMount() {
       auth.onAuthStateChanged((user) => {
         if (user) {
           this.setState({ user });
         } 
       });
-  
-      const itemsRef = firebase.database().ref('items');
+      const itemsRef = firebase.database().ref('quizzes/quiz2');
       itemsRef.on('value', (callback) => {
-      let items = callback.val();
-      let newState = [];
-      for (let item in items){
-      newState.push({
-        id: item,
-        title: items[item].title,
-        user: items[item].user
-    });
-    }
-    this.setState({
-      items: newState
-    });
-      });
-    }
+      let questions = callback.val();
+      let data_list = [];
+      
+      for (let item in questions){
+        data_list.push(
+          {
+            id: item,
+            question: questions[item].questionText,
+            questionType: questions[item].questionType,
+            choice1: questions[item].choice1,
+            choice2: questions[item].choice2,
+            choice3: questions[item].choice3,
+            choice4: questions[item].choice4,
+            answer: questions[item].answer
+          });      
+          
+        }
+        this.setState({
+          questions:data_list
+        });
+          });
+        }
+    
     handleChange(event) {
       this.setState({
         [event.target.name]: event.target.value
@@ -64,26 +72,7 @@ class quiz extends Component {
           });
         });
     }
-    handleSubmit(event) {
-      event.preventDefault();
-      const itemsRef = firebase.database().ref('items');
-      const item = {
-        title: this.state.currentItem,
-        user: this.state.user.displayName || this.state.user.email
-      }
-      itemsRef.push(item);
-      this.setState({
-        currentItem: '',
-        userName: ''
-      }
-      
-      )
-      
-    }
-    removeItem(itemId) {
-      const itemRef = firebase.database().ref(`/items/${itemId}`);
-      itemRef.remove();
-    }
+   
     render() {
   return <div>
     <div className='app'>
@@ -110,6 +99,41 @@ class quiz extends Component {
       <div>
          <h1>Quiz</h1>
          <p> insert information</p>
+         <div>
+            <ul>
+            {this.state.questions.map((item) => {
+            return (
+            <li key={item.id}>
+            <p>Question: {item.question}</p>
+            <p>Question Type: {item.questionType}</p>
+            
+            
+            {(item.questionType == 1) ?
+              <form>
+                <p>Choices:</p>
+                <li>1. {item.choice1}</li>           
+                <li>2. {item.choice2}</li>   
+                <li>3. {item.choice3}</li>   
+                <li>4. {item.choice4}</li>    
+              </form>       
+            
+            : 
+            
+              <form>
+                <input type="text" name="answer" placeholder="Your response?"  />
+              </form>
+            }
+            
+            
+            
+            
+                   
+            <p>Answer: {item.answer}</p>
+            </li>)
+              })}
+            </ul>
+          </div>
+        
         <Footer />
       </div>
       :
