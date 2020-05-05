@@ -10,6 +10,7 @@ import CompeteSummary from './components/summary';
 import Project from './components/project';
 import Homework from './components/homework';
 import Quiz from './components/quiz';
+import editQuiz from './components/editQuiz';
 import Labs from './components/labs';
 import Chat from './components/chat';
 import Error from './components/error';
@@ -32,7 +33,7 @@ class App extends Component {
              <Route path="/quiz" component={Quiz}/>
              <Route path="/labs" component={Labs}/>
              <Route path="/chat" component={Chat}/>
-
+             <Route path="/editquiz" component={editQuiz}/>
 
             <Route component={Error}/>
            </Switch>
