@@ -18,8 +18,14 @@ class Dashboard extends React.Component {
         const messageForm = document.getElementById('send-container')
         const messageInput = document.getElementById('message-input')
         
-        //const name = this.state.user.displayName;
-        const name = null;
+        
+        
+        //const name =  prompt("What is your desired screen name?");
+        
+        var name = this.state.user;
+        //.then(response =>response.json()).then(json => name = json.displayName)
+        
+        
         socket.emit('new-user', name)
         
         socket.on('chat-message', data => {
