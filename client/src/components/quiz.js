@@ -29,28 +29,31 @@ class quiz extends Component {
         } 
       });
       const itemsRef = firebase.database().ref('quizzes');
-      itemsRef.on('value', (callback) => {
-        let quizList = callback.val();
-        console.log(quizList);
-        let data_list = [];
-        for (var quiz in quizList){
-          var quizName = quiz;
-          if(quizList.hasOwnProperty(quiz)) {
-            var val = quizList[quiz];
-            data_list.push(
-              {
-                quizName: val,
-                id: quizName,
-              });      
-          
-            }
-            this.setState({
-              quizzes:data_list,
-              quizObjects: quizList
+            itemsRef.on('value', (callback) => {
+              let quizList = callback.val();
+              console.log(quizList);
+              let data_list = [];
+              for (var quiz in quizList){
+                var quizName = quiz;
+                if(quizList.hasOwnProperty(quiz)) {
+                  var val = quizList[quiz];
+                  data_list.push(
+                    {
+                      quizName: val,
+                      id: quizName,
+                    });
+
+                  }
+                  this.setState({
+                    quizzes:data_list,
+                    quizObjects: quizList
+
+                    //quizzes: quizList,
+                    //quizObjects:data_list
+                  });
+                }
+                console.log(data_list)
             });
-          }
-          
-      });
     }
     
     handleChange(event) {
@@ -77,15 +80,19 @@ class quiz extends Component {
         });
     }
 
-    startQuiz = (quizKey, history) => e => {
+    startQuiz = (quizKey, history) => (e) => {
+      console.log(quizKey);
+      console.log(history);
       console.log(this.state.quizObjects)
+      history.quizKey = quizKey;
+      history.state = this.state;
       history.push({
-        pathname:'/quizRoom',
-        state: {
-          // quiz: this.state.quizObjects.
-        }
+        pathname:'/quizRoom'
       });
+
     }
+
+
    
     render() {
   return <div >

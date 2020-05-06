@@ -14,11 +14,13 @@ class QuizRoom extends Component {
         }
     }
 
+
     componentDidMount() {
       socket = io('http://localhost:8880/communication')
-      var quizKey = this.props.history.location.state.id;
+      var quizKey = this.props.history.quizKey;
       socket.emit('enable-quiz-up', quizKey);
-      console.log(quizKey);
+      console.log(this.props.history.quizKey);
+      //console.log(this.history.state);
     }
 
     componentWillUnmount() {
