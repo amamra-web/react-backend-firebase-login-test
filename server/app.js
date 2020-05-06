@@ -15,7 +15,7 @@ var serv = require('http').Server(app);
 var port = process.env.PORT || 8880;
 
 
-app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.static(path.join(__dirname + '/public')));
 
 
 serv.listen(port);
@@ -92,6 +92,27 @@ var addUser = function(data,cb){
 var io = require('socket.io')(serv,{});
 var socketIndex = require('./public/js/socketIndex.js')
 socketIndex.startCommunication(io);
+
+const users = {}
+
+io.on('connection', socket => {
+    console.log("Socket chat connection started");
+    
+  socket.on('new-user', name => {
+    users[socket.id] = name
+    socket.broadcast.emit('user-connected', name)
+    
+  })
+  socket.on('send-chat-message', message => {
+    console.log(message);
+    socket.broadcast.emit('chat-message', { message: message, name: users[socket.id] })
+  })
+  socket.on('disconnect', () => {
+    socket.broadcast.emit('user-disconnected', users[socket.id])
+    console.log("Socket chat connection disconnected");
+    delete users[socket.id]
+  })
+})
 
 setInterval(function(){
     var pack = {

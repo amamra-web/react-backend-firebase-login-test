@@ -12,8 +12,8 @@ const Navigation = () => {
           <NavLink to="/quiz">Quiz</NavLink>
            {/* <NavLink to="/graph">Graph</NavLink>
           <NavLink to="/labs">Labs</NavLink>
-          <NavLink to="/about">FAQ</NavLink>
-          <NavLink to="/chat">Chat</NavLink> */}
+          <NavLink to="/about">FAQ</NavLink> */}
+          <NavLink to="/chat">Chat</NavLink>
           <NavLink to="/editQuiz">Create new Quiz Question</NavLink>
        </div>
     );
