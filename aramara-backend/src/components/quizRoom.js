@@ -21,6 +21,10 @@ class QuizRoom extends Component {
       console.log(quizKey);
     }
 
+    componentWillUnmount() {
+        socket.disconnect();
+    }
+
     render() {
         return(
             <header>

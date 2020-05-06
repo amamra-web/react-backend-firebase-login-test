@@ -14,6 +14,7 @@ class quiz extends Component {
         currentItem: '',
         userName: '',
         quizzes: [],
+        quizObjects: '',
         user: null
       }
       this.handleChange = this.handleChange.bind(this);
@@ -30,19 +31,25 @@ class quiz extends Component {
       const itemsRef = firebase.database().ref('quizzes');
       itemsRef.on('value', (callback) => {
         let quizList = callback.val();
+        console.log(quizList);
         let data_list = [];
-        
-        for (let quiz in quizList){
-          console.log(quiz);
-          data_list.push(
-            {
-              id: quiz
-            });      
+        for (var quiz in quizList){
+          var quizName = quiz;
+          if(quizList.hasOwnProperty(quiz)) {
+            var val = quizList[quiz];
+            data_list.push(
+              {
+                quizName: val,
+                id: quizName,
+              });      
           
+            }
+            this.setState({
+              quizzes:data_list,
+              quizObjects: quizList
+            });
           }
-          this.setState({
-            quizzes:data_list
-          });
+          
       });
     }
     
@@ -71,9 +78,12 @@ class quiz extends Component {
     }
 
     startQuiz = (quizKey, history) => e => {
+      console.log(this.state.quizObjects)
       history.push({
         pathname:'/quizRoom',
-        state: {id: quizKey}
+        state: {
+          // quiz: this.state.quizObjects.
+        }
       });
     }
    
