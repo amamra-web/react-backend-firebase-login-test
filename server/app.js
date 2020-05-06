@@ -9,17 +9,13 @@ var path = require('path');
 var serv = require('http').Server(app);
 
 
-//Application components
-var routes = require('./routes');
+
 
 // Set the port number
 var port = process.env.PORT || 8880;
 
-// View engine setup
-app.set('views', path.join(__dirname, './views'));
-app.set('view engine', 'ejs');
+
 app.use(express.static(path.join(__dirname, '/public')));
-app.use('/', routes);
 
 
 serv.listen(port);
@@ -73,13 +69,6 @@ Student.update = function(){
         });    
     }
     return pack;
-}
-///User Management System
-var USERS = {
-    //username:password hardcoded
-    "admin":"root",
-    "stu1":"anna",
-    "stu2":"bob",  
 }
  
 var isValidPassword = function(data,cb){
