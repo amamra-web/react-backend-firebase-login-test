@@ -16,6 +16,7 @@ import Chat from './components/chat';
 import Error from './components/error';
 import Navigation from './components/Navigation';
 import graph from "./components/graph";
+import quizRoom from "./components/quizRoom"
 
 class App extends Component {
   
@@ -36,6 +37,7 @@ class App extends Component {
              <Route path="/chat" component={Chat}/>
              <Route path="/editquiz" component={editQuiz}/>
              <Route path="/graph" component={graph}/>
+             <Route path="/quizRoom" component={quizRoom}/>
 
             <Route component={Error}/>
            </Switch>

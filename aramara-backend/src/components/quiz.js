@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import io from 'socket.io-client';
-
+import { BrowserRouter, Route, withRouter } from 'react-router-dom'
 import Footer from '../partial/footer';
 import firebase, { auth, provider } from '../firebase.js';
 
-var socket = null;
- 
+var socket = null; 
+var history;
 class quiz extends Component {
    constructor() 
    {
@@ -13,7 +13,7 @@ class quiz extends Component {
       this.state = {
         currentItem: '',
         userName: '',
-        questions: [],
+        quizzes: [],
         user: null
       }
       this.handleChange = this.handleChange.bind(this);
@@ -22,36 +22,29 @@ class quiz extends Component {
       
     }
     componentDidMount() {
-      socket = io('http://localhost:8880/communication')
       auth.onAuthStateChanged((user) => {
         if (user) {
           this.setState({ user });
         } 
       });
-      const itemsRef = firebase.database().ref('quizzes/quiz2');
+      const itemsRef = firebase.database().ref('quizzes');
       itemsRef.on('value', (callback) => {
-      let questions = callback.val();
-      let data_list = [];
-      
-      for (let item in questions){
-        data_list.push(
-          {
-            id: item,
-            question: questions[item].questionText,
-            questionType: questions[item].questionType,
-            choice1: questions[item].choice1,
-            choice2: questions[item].choice2,
-            choice3: questions[item].choice3,
-            choice4: questions[item].choice4,
-            answer: questions[item].answer
-          });      
+        let quizList = callback.val();
+        let data_list = [];
+        
+        for (let quiz in quizList){
+          console.log(quiz);
+          data_list.push(
+            {
+              id: quiz
+            });      
           
-        }
-        this.setState({
-          questions:data_list
-        });
+          }
+          this.setState({
+            quizzes:data_list
           });
-        }
+      });
+    }
     
     handleChange(event) {
       this.setState({
@@ -77,15 +70,18 @@ class quiz extends Component {
         });
     }
 
-    componentWillUnmount() {
-      socket.disconnect();
+    startQuiz = (quizKey, history) => e => {
+      history.push({
+        pathname:'/quizRoom',
+        state: {id: quizKey}
+      });
     }
    
     render() {
-  return <div>
+  return <div >
     <div className='app'>
       <header>
-        <div className="wrapper">
+        <div> 
           <h1>Amamra's Classroom</h1>
 
           {this.state.user ?
@@ -105,39 +101,18 @@ class quiz extends Component {
 
       {this.state.user ?
       <div>
-         <h1>Quiz</h1>
-         <p> insert information</p>
+         <h1>Quizzes</h1> 
          <div>
-            <ul>
-            {this.state.questions.map((item) => {
-            return (
-            <li key={item.id}>
-            <p>{item.question}</p>
-            {/* <p>Question Type: {item.questionType}</p> */}
-            
-            
-            {(item.questionType == 1) ?
-              <form>
-                {/* <p>Choices:</p> */}
-                <button type="button">{item.choice1}</button>           
-                <button type="button">{item.choice2}</button>   
-                <button type="button">{item.choice3}</button>   
-                <button type="button">{item.choice4}</button>    
-              </form>       
-            
-            : 
-            
-              <form>
-                <input type="text" name="answer" placeholder="Your response?"  />
-              </form>
-            }
-            
-            
-            
-            
-                   
-            {/* <p>Answer: {item.answer}</p> */}
-            </li>)
+            <ul style={{display:'block', textAlign: 'center'}}>
+            {this.state.quizzes.map((item) => {
+              return (
+                <li key={item.id}>
+                  <h2 style={{textAlign:'center'}}>{item.id}</h2>
+                  <Route render={({history}) => (
+                    <button onClick={this.startQuiz(item.id, history)} style={{margin:'0 auto'}} type='button'>Start Quiz</button>
+                  )}/>
+                  
+                </li>)
               })}
             </ul>
           </div>
